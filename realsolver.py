@@ -2,8 +2,8 @@
 import random
 import copy
 
-Grid = [[0 for x in range(9)] for j in range(9)]
-def solve(gr, rows = -1, cols = -1 ,nums = -1):
+
+def solve(gr, rows=-1, cols=-1, nums=-1):
     '''
     Function that solves sudoku puzzles
 
