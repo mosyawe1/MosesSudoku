@@ -1,44 +1,20 @@
+# Program that Generates and Solves Sudokus
 import random
 import copy
 
-grid = [
-    [0, 0, 0, 3, 0, 0, 0, 0, 7],
-    [2, 3, 8, 5, 4, 7, 6, 9, 1],
-    [0, 0, 0, 0, 0, 9, 3, 8, 0],
-    [0, 0, 0, 4, 0, 3, 7, 6, 2],
-    [0, 0, 0, 9, 1, 0, 5, 4, 0],
-    [4, 0, 0, 7, 0, 2, 0, 0, 9],
-    [0, 0, 0, 8, 9, 0, 0, 0, 3],
-    [8, 0, 3, 0, 0, 0, 9, 1, 4],
-    [0, 0, 0, 0, 0, 0, 0, 5, 0]
-]
-grid2 = [
-    [1, 1, 1, 1, 0, 0, 0, 0, 7],
-    [2, 3, 8, 5, 4, 7, 6, 9, 1],
-    [0, 0, 0, 0, 0, 9, 3, 8, 0],
-    [0, 0, 0, 4, 0, 3, 7, 6, 2],
-    [0, 0, 0, 9, 1, 0, 5, 4, 0],
-    [4, 0, 0, 7, 0, 2, 0, 0, 9],
-    [0, 0, 0, 8, 9, 0, 0, 0, 3],
-    [8, 0, 3, 0, 0, 0, 9, 1, 4],
-    [0, 0, 0, 0, 0, 0, 0, 5, 0]
-]
-grid3 = [
-    [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    [4, 5, 6, 1, 2, 3, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
-]
 Grid = [[0 for x in range(9)] for j in range(9)]
-def solve(gr,rows = -1,cols = -1,nums = -1):
+def solve(gr, rows = -1, cols = -1 ,nums = -1):
+    '''
+
+    :param gr:
+    :param rows:
+    :param cols:
+    :param nums:
+    :return:
+    '''
 
     find = empty(gr)
-    lst = [1,2,3,4,5,6,7,8,9]
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     random.shuffle(lst)
     if not find:
         return True
@@ -57,35 +33,49 @@ def solve(gr,rows = -1,cols = -1,nums = -1):
     return False
 
 def generate_puzzle():
+    '''
+
+    :return:
+    '''
     lst = list(range(0, 81))
     random.shuffle(lst)
     Grid = [[0 for x in range(9)] for y in range(9)]
     solve(Grid)
     count = 0
     for i in lst:
-        row = i//9
-        col = i%9
+        row = i // 9
+        col = i % 9
         new_grid = copy.deepcopy(Grid)
         num = new_grid[row][col]
         new_grid[row][col] = 0
         solved_grid = solve(new_grid, row, col, num)
         if solved_grid == False:
             Grid[row][col] = 0
-            count +=1
+            count += 1
             if count == 25:
                 break
     return Grid
 
 
-
-
 def disp_grid(gr): #display grid
+    '''
+
+    :param gr:
+    :return:
+    '''
     for i in range(len(gr)):
         for j in range(len(gr[0])):
             print(gr[i][j], end=' ')
         print()
 # Check to see if the board is valid (grid, number, position)
 def valid(gr, num, loc):
+    '''
+
+    :param gr:
+    :param num:
+    :param loc:
+    :return:
+    '''
     # Check row
     for i in range(9):
         if gr[loc[0]][i] == num:
@@ -108,6 +98,11 @@ def valid(gr, num, loc):
 
 
 def empty(gr): #find empty parts of grid
+    '''
+
+    :param gr:
+    :return:
+    '''
     for i, row in enumerate(gr):
         for j, dig in enumerate(row):
             if dig == 0:
@@ -115,9 +110,26 @@ def empty(gr): #find empty parts of grid
     return None
 
 
-# Generate a sudoku puzzle
+def menu():
+    ans = True
+    while ans:
+        make_puzzle = int(input('To generate a sudoku enter 1: \n'
+                                'To exit the program enter 3:'))
+        if make_puzzle == 1:
+            puzzle = generate_puzzle()
+            disp_grid(puzzle)
+            sol = int(input('\n To see the solved sudoku enter 2: \n'
+                            '\n To exit the program enter 3: '))
+            if sol == 2:
+                solve(puzzle,-1,-1,-1)
+                disp_grid(puzzle)
+            elif sol == 3:
+                print('Goodbye')
+                ans = False
+        elif make_puzzle == 3:
+            print('Goodbye')
+            ans = False
 
-disp_grid(generate_puzzle())
-
+menu()
 
 
