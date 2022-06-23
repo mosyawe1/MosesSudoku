@@ -24,16 +24,16 @@ def solve(gr, row, col):
         row += 1
         col = 0
     if gr[row][col] > 0:
-        return solve(gr, row, col + 1)
-
-    for num in range(1, 10):
+        return solve(grid, row, col + 1)
+    for num in range(1,10):
         if valid(gr, row, col, num):
             gr[row][col] = num
             if solve(gr, row, col + 1):
                 return True
         gr[row][col] = 0
-
+    print(grid[row][col], end=' ')
     return False
+
 
 
 def disp_grid(gr): #display grid
@@ -53,12 +53,11 @@ def valid(gr, row, col, num):
             return False
 
     # Check 3 x 3 box
-    cube_x = row // 3
-    cube_y = col // 3
-
-    for i in range(cube_y*3,cube_y*3+3):
-        for j in range(cube_x*3,cube_x*3+3):
-            if gr[i][j] == num and (i,j) != row and col:
+    corner_row = row - row % 3
+    corner_col = col - col % 3
+    for x in range(3):
+        for y in range(3):
+            if gr[corner_row+ x][corner_col + y] == num:
                 return False
     return True
 
@@ -66,34 +65,12 @@ def valid(gr, row, col, num):
 
 def empty(gr): #find empty parts of grid
     for i, row in enumerate(gr):
-        for j, dig in enumerate(row):
-            if dig == 0:
+        for j, digit in enumerate(row):
+            if digit == 0:
                 return (i,j)  # row, col
     return None
 
 #Generating Sudoku puzzles
-def createsudoku():
-    Grid = [[0 for x in range(0,9)] for y in range(0,9)]
-    for i,j in itertools.product(range(9), repeat=2):
-        Grid[i][j] = 0
-    # The range is the amount of numbers in the grid
-    for i in range(25):
-        num = random.randrange(1,10)
-        row = random.randrange(9)
-        col = random.randrange(9)
-        while(not valid(Grid, row, col, num) or Grid[row][col] != 0):
-            row = random.randrange(9)
-            col = random.randrange(9)
-            num = random.randrange(1,10)
-        Grid[row][col] = num
 
-    return Grid
-
-if solve(grid,0,0):
-    for i in range(9):
-        for j in range(9):
-            print(grid[i][j], end=' ')
-        print()
-
-disp_grid(createsudoku())
+disp_grid(grid)
 
