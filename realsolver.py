@@ -119,7 +119,7 @@ def menu():
             puzzle = generate_puzzle()
             disp_grid(puzzle)
             sol = int(input('\n To see the solved sudoku enter 2: \n'
-                            '\n To exit the program enter 3: '))
+                            'To exit the program enter 3: '))
             if sol == 2:
                 solve(puzzle,-1,-1,-1)
                 disp_grid(puzzle)
