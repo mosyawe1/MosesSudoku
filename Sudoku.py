@@ -7,7 +7,7 @@ def empty(gr):
     '''
     Finds the empty spots on the grid which are represented by 0 and returns them as none
     :param gr: a list of lists
-    :return: returns 0's if they're found, if there is no blank squares it will return none
+    :return: returns 0's if they're found, returns none
     '''
     for i, row in enumerate(gr):
         for j, digit in enumerate(row):
