@@ -7,7 +7,7 @@ def empty(gr):
     '''
     Finds the empty spots on the grid which are represented by 0 and returns them as none
     :param gr: a list
-    :return: returns 0's, if there is no blank squares it will return none
+    :return: returns 0's if they're found, if there is no blank squares it will return none
     '''
     for i, row in enumerate(gr):
         for j, digit in enumerate(row):
@@ -20,7 +20,7 @@ def disp_grid(gr):
     '''
     Function that displays sudoku puzzle as matrix
     :param gr: a list
-    :return: a matrix
+    :return: list of lists
     '''
     for i in range(len(gr)):
         for j in range(len(gr[0])):
@@ -31,7 +31,7 @@ def disp_grid(gr):
 def valid(gr, num, loc):
     '''
     Function that checks to see if a sudoku puzzle is valid
-    :param gr: a list
+    :param gr: a list of lists
     :param num: integer that's added to a row
     :param loc: integer that's used to represent the location of a number in the grid
     :return: True if it's a valid position, False if not a valid position
@@ -95,7 +95,7 @@ def generate_puzzle():
     '''
     Function that creates a sudoku puzzle with random
     points marked as 0
-    :return: list (Matrix)
+    :return: list of lists
     '''
     lst = list(range(0, 81))
     random.shuffle(lst)
@@ -120,7 +120,7 @@ def generate_puzzle():
 def menu():
     '''
     Creates a menu for solving and generating a sudoku
-    :return:Returns an unsolved sudoku grid, solved Grid, and exits program
+    :return: list of lists or exits programs
     '''
     ans = True
     while ans:
