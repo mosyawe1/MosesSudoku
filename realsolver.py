@@ -6,7 +6,7 @@ import copy
 def empty(gr):
     '''
     Finds the empty spots on the grid which are represented by 0 and returns them as none
-    :param gr: a list
+    :param gr: a list of lists
     :return: returns 0's if they're found, if there is no blank squares it will return none
     '''
     for i, row in enumerate(gr):
@@ -19,7 +19,7 @@ def empty(gr):
 def disp_grid(gr):
     '''
     Function that displays sudoku puzzle as matrix
-    :param gr: a list
+    :param gr: a list of lists
     :return: list of lists
     '''
     for i in range(len(gr)):
