@@ -1,146 +1,94 @@
-# Program that Generates and Solves Sudoku Puzzles
 import random
 import copy
 
-# Find empty parts of grid
-def empty(gr):
-    '''
-    Finds the empty spots on the grid which are represented by 0 and returns them as none
-    :param gr: a list of lists
-    :return: returns 0's if they're found, returns none
-    '''
-    for i, row in enumerate(gr):
-        for j, digit in enumerate(row):
-            if digit == 0:
-                return (i,j)  # row, col
-    return None
+class SudokuSolver:
+    def __init__(self):
+        self.grid = [[0 for _ in range(9)] for _ in range(9)]
 
-# Display Grid
-def disp_grid(gr):
-    '''
-    Function that displays sudoku puzzle as matrix
-    :param gr: a list of lists
-    :return: list of lists
-    '''
-    for i in range(len(gr)):
-        for j in range(len(gr[0])):
-            print(gr[i][j], end=' ')
-        print()
+    def empty(self):
+        for i, row in enumerate(self.grid):
+            for j, digit in enumerate(row):
+                if digit == 0:
+                    return (i, j)
+        return None
 
-# Check to see if the board is valid (grid, number, position)
-def valid(gr, num, loc):
-    '''
-    Function that checks to see if a sudoku puzzle is valid
-    :param gr: a list of lists
-    :param num: integer that's added to a row
-    :param loc: integer that's used to represent the location of a number in the grid
-    :return: True if it's a valid position, False if not a valid position
-    '''
-    # Check row
-    for i in range(9):
-        if gr[loc[0]][i] == num:
-            return False
-    # Check column
-    for i in range(9):
-        if gr[i][loc[1]] == num:
-            return False
+    def display_grid(self):
+        for i in range(len(self.grid)):
+            for j in range(len(self.grid[0])):
+                print(self.grid[i][j], end=' ')
+            print()
 
-    # Check 3 x 3 square
-    # Given a position it finds the square that the number is in
-    square_x = loc[1] // 3
-    square_y = loc[0] // 3
-    # Makes sure that the number doesn't appear twice in box
-    # Multiply by 3 to get the different indexes
-    for i in range(square_y*3,square_y*3+3):
-        for j in range(square_x*3,square_x*3+3):
-            if gr[i][j] == num and (i, j) != loc:
+    def valid(self, num, loc):
+        for i in range(9):
+            if self.grid[loc[0]][i] == num or self.grid[i][loc[1]] == num:
                 return False
-    return True
 
-#Sudoku Solver
-def solve(gr, rows=-1, cols=-1, nums=-1):
-    '''
-    Function that solves sudoku puzzles
+        square_x = loc[1] // 3
+        square_y = loc[0] // 3
 
-    :param gr: list
-    :param rows: integer: -1
-    :param cols: integer: -1
-    :param nums: integer: -1
-    :return: False if none of the numbers are valid, return True if they are valid
-    '''
-    #Picks an empty point, tries all numbers that work until it's valid
-    #Repeats until Grid is full
-    find = empty(gr)
-    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    random.shuffle(lst)
-    if not find:
+        for i in range(square_y * 3, square_y * 3 + 3):
+            for j in range(square_x * 3, square_x * 3 + 3):
+                if self.grid[i][j] == num and (i, j) != loc:
+                    return False
         return True
-    else:
-        row, col = find
-    #If it's not empty then return True, indicating it's done
 
-    for i in lst:
-        if valid(gr, i, (row, col)) and not (row == rows and col == cols and nums == i):
-            gr[row][col] = i
+    def solve(self, rows=-1, cols=-1, nums=-1):
+        find = self.empty()
+        lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        random.shuffle(lst)
+        if not find:
+            return True
+        else:
+            row, col = find
 
-            if solve(gr, rows, cols, nums):
-                return True
-            #If solve doesn't work it changes the value to 0 and repeats the process recursively
-            gr[row][col] = 0
+        for i in lst:
+            if self.valid(i, (row, col)) and not (row == rows and col == cols and nums == i):
+                self.grid[row][col] = i
 
-    return False
+                if self.solve(rows, cols, nums):
+                    return True
 
-#Sudoku Generator
-def generate_puzzle():
-    '''
-    Function that creates a sudoku puzzle with random
-    points marked as 0
-    :return: list of lists
-    '''
-    lst = list(range(0, 81))
-    random.shuffle(lst)
-    Grid = [[0 for x in range(9)] for y in range(9)]
-    solve(Grid)
-    count = 0
-    for i in lst:
-        row = i // 9
-        col = i % 9
-        new_grid = copy.deepcopy(Grid)
-        num = new_grid[row][col]
-        new_grid[row][col] = 0
-        solved_grid = solve(new_grid, row, col, num)
-        if solved_grid is False:
-            Grid[row][col] = 0
-            count += 1
-            if count == 25:
-                break
-    return Grid
+                self.grid[row][col] = 0
 
-#Menu for sudoku game
-def menu():
-    '''
-    Creates a menu for solving and generating a sudoku
-    :return: list of lists or exits programs
-    '''
-    ans = True
-    while ans:
-        make_puzzle = int(input('To generate a sudoku enter 1: \n'
-                                'To exit the program enter 3:'))
-        if make_puzzle == 1:
-            puzzle = generate_puzzle()
-            disp_grid(puzzle)
-            sol = int(input('\n''To see the solved sudoku enter 2: \n'
-                            'To exit the program enter 3: '))
-            if sol == 2:
-                solve(puzzle, -1, -1, -1)
-                disp_grid(puzzle)
-            elif sol == 3:
+        return False
+
+    def generate_puzzle(self):
+        self.solve()
+
+        puzzle_grid = copy.deepcopy(self.grid)
+
+        for _ in range(40):
+            row, col = random.randint(0, 8), random.randint(0, 8)
+            puzzle_grid[row][col] = 0
+
+        self.grid = puzzle_grid
+
+    def menu(self):
+        ans = True
+        while ans:
+            make_puzzle = int(input('Enter 1 to generate a sudoku:\n'
+                                    'Enter 3 to exit the program: '))
+            if make_puzzle == 1:
+                self.generate_puzzle()
+                self.display_grid()
+
+                sol = int(input('\n'
+                                'Enter 2 to see the solved sudoku:\n'
+                                'Enter 3 to exit the program: '))
+                if sol == 2:
+                    self.solve()
+                    self.display_grid()
+                elif sol == 3:
+                    print('Goodbye')
+                    ans = False
+
+            elif make_puzzle == 3:
                 print('Goodbye')
                 ans = False
-        elif make_puzzle == 3:
-            print('Goodbye')
-            ans = False
-
-menu()
+            else:
+                print('Invalid Input!')
 
 
+if __name__ == "__main__":
+    sudoku_solver = SudokuSolver()
+    sudoku_solver.menu()
