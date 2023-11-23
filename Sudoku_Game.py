@@ -48,8 +48,3 @@ class SudokuGame:
         # Implement validation logic for user input
         pass
 
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    game = SudokuGame(root)
-    root.mainloop()
